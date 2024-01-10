@@ -7,24 +7,37 @@
 
 #include <memory>
 
-class IfNode final : public AstNode {
-  private:
-    std::unique_ptr<ExpressionNode> m_condition;
-    std::unique_ptr<CompoundStatementNode> m_body;
-    std::unique_ptr<CompoundStatementNode> m_else_body;
+class IfNode final : public AstNode
+{
+private:
+  std::unique_ptr<ExpressionNode> m_condition;
+  std::unique_ptr<CompoundStatementNode> m_body;
+  std::unique_ptr<CompoundStatementNode> m_else_body;
 
-  public:
-    ~IfNode() = default;
-    IfNode(const uint32_t line, const uint32_t col,
-           ExpressionNode *p_condition, CompoundStatementNode *p_body,
-           CompoundStatementNode *p_else_body)
-        : AstNode{line, col}, m_condition(p_condition), m_body(p_body),
-          m_else_body(p_else_body){}
+public:
+  ~IfNode() = default;
+  IfNode(const uint32_t line, const uint32_t col,
+         ExpressionNode *p_condition, CompoundStatementNode *p_body,
+         CompoundStatementNode *p_else_body)
+      : AstNode{line, col}, m_condition(p_condition), m_body(p_body),
+        m_else_body(p_else_body) {}
 
-    const ExpressionNode &getCondition() const { return *m_condition.get(); }
+  const ExpressionNode &getCondition() const { return *m_condition.get(); }
 
-    void accept(AstNodeVisitor &p_visitor) override { p_visitor.visit(*this); }
-    void visitChildNodes(AstNodeVisitor &p_visitor) override;
+  bool hasElse() const
+  {
+    if (m_else_body)
+      return true;
+    else
+      return false;
+  }
+
+  void accept(AstNodeVisitor &p_visitor) override { p_visitor.visit(*this); }
+  void visitChildNodes(AstNodeVisitor &p_visitor) override;
+
+  void visitExpressionNode(AstNodeVisitor &p_visitor);
+  void visitIfBodyNode(AstNodeVisitor &p_visitor);
+  void visitElseBodyNode(AstNodeVisitor &p_visitor);
 };
 
 #endif

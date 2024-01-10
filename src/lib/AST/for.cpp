@@ -2,7 +2,8 @@
 
 #include <cassert>
 
-const ConstantValueNode &ForNode::getLowerBound() const {
+const ConstantValueNode &ForNode::getLowerBound() const
+{
     const auto *const lower_ptr =
         dynamic_cast<const ConstantValueNode *>(&m_init_stmt->getExpr());
 
@@ -12,7 +13,8 @@ const ConstantValueNode &ForNode::getLowerBound() const {
     return *lower_ptr;
 }
 
-const ConstantValueNode &ForNode::getUpperBound() const {
+const ConstantValueNode &ForNode::getUpperBound() const
+{
     const auto *const upper_ptr =
         dynamic_cast<const ConstantValueNode *>(m_end_condition.get());
 
@@ -22,9 +24,29 @@ const ConstantValueNode &ForNode::getUpperBound() const {
     return *upper_ptr;
 }
 
-void ForNode::visitChildNodes(AstNodeVisitor &p_visitor) {
+std::string ForNode::getLoopVarName() const
+{
+    return m_loop_var_decl->getVariables()[0]->getName();
+}
+
+void ForNode::visitChildNodes(AstNodeVisitor &p_visitor)
+{
     m_loop_var_decl->accept(p_visitor);
     m_init_stmt->accept(p_visitor);
     m_end_condition->accept(p_visitor);
+    m_body->accept(p_visitor);
+}
+
+void ForNode::visitLoopVarInitNodes(AstNodeVisitor &p_visitor)
+{
+    m_loop_var_decl->accept(p_visitor);
+    m_init_stmt->accept(p_visitor);
+}
+void ForNode::visitEndConditionNode(AstNodeVisitor &p_visitor)
+{
+    m_end_condition->accept(p_visitor);
+}
+void ForNode::visitBodyNode(AstNodeVisitor &p_visitor)
+{
     m_body->accept(p_visitor);
 }

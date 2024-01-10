@@ -7,21 +7,25 @@
 
 #include <memory>
 
-class WhileNode final : public AstNode {
-  private:
-    std::unique_ptr<ExpressionNode> m_condition;
-    std::unique_ptr<CompoundStatementNode> m_body;
+class WhileNode final : public AstNode
+{
+private:
+  std::unique_ptr<ExpressionNode> m_condition;
+  std::unique_ptr<CompoundStatementNode> m_body;
 
-  public:
-    ~WhileNode() = default;
-    WhileNode(const uint32_t line, const uint32_t col,
-              ExpressionNode *p_condition, CompoundStatementNode *p_body)
-        : AstNode{line, col}, m_condition(p_condition), m_body(p_body){}
+public:
+  ~WhileNode() = default;
+  WhileNode(const uint32_t line, const uint32_t col,
+            ExpressionNode *p_condition, CompoundStatementNode *p_body)
+      : AstNode{line, col}, m_condition(p_condition), m_body(p_body) {}
 
-    const ExpressionNode &getCondition() const { return *m_condition.get(); }
+  const ExpressionNode &getCondition() const { return *m_condition.get(); }
 
-    void accept(AstNodeVisitor &p_visitor) override { p_visitor.visit(*this); }
-    void visitChildNodes(AstNodeVisitor &p_visitor) override;
+  void accept(AstNodeVisitor &p_visitor) override { p_visitor.visit(*this); }
+  void visitChildNodes(AstNodeVisitor &p_visitor) override;
+
+  void visitConditionNode(AstNodeVisitor &p_visitor);
+  void visitBodyNode(AstNodeVisitor &p_visitor);
 };
 
 #endif

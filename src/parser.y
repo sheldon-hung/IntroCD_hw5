@@ -164,6 +164,8 @@ Program:
                                *$3, *$4, $5);
 
         free($1);
+        delete $3;
+        delete $4;
     }
 ;
 
@@ -465,6 +467,8 @@ CompoundStatement:
     END {
         $$ = new CompoundStatementNode(@1.first_line, @1.first_column,
                                        *$2, *$3);
+        delete $2;
+        delete $3;
     }
 ;
 
