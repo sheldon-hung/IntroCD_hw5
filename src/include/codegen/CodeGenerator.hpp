@@ -22,7 +22,6 @@ private:
   char var_ref_mode = 'r';
   int func_para_num = 0, para_reg_idx = 0;
   int label_num = 1;
-  std::string str_decl_code = "";
 
 public:
   ~CodeGenerator() = default;
